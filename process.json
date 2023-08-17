@@ -37,9 +37,9 @@
       "NODE_PORT":3000,
       "DB_HOST":"db4free.net",
       "DB_PORT": "3306",
-      "DB_USER": "audiobook",
-      "DB_PASSWORD": "thanhbinh88",
-      "DB_NAME": "audiobook",
+      "DB_USER": "someguy46",
+      "DB_PASSWORD": "ny9tgxj1xd55ywcejmg5",
+      "DB_NAME": "api_test",
       "DB_DIALECT": "mysql"
     }
   }]
