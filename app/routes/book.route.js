@@ -1,7 +1,3 @@
-/**
- * Created by bioz on 1/13/2017.
- */
-// our components
 const bookService = require('../services/book.service');
 
 module.exports = function (app) {

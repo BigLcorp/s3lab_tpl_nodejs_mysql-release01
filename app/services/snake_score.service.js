@@ -1,39 +1,36 @@
-const book = require('../models/book.model');
+const snake_score = require('../models/snake_score.model');
 const rest = require('../utils/restware.util');
+const MySQLSequel = require('../utils/sequelize.util');
 
 module.exports = {
     create: function (req, res) {
         try {
             const query = {};
-            query.created_by = req.body.accessAccountId;
-            query.updated_by = req.body.accessAccountId;
-            query.title = req.body.title;
-            query.category = req.body.category;
-            query.author = req.body.author;
-            query.parts = req.body.parts;
+            query.created_by = req.body.accessAccountId;;
+            query.score = req.body.score;
 
-            book.create(query).then((result) => {
+            snake_score.create(query).then((result) => {
                 'use strict';
                 return rest.sendSuccessOne(res, result, 200);
             }).catch(function (error) {
                 'use strict';
                 console.log(error);
-                return rest.sendError(res, 1, 'create_book_fail', 400, error);
+                return rest.sendError(res, 1, 'create_snake_score_fail', 400, error);
             });
         } catch (error) {
             console.log(error);
-            return rest.sendError(res, 1, 'create_book_fail', 400, error);
+            return rest.sendError(res, 1, 'create_snake_score_fail', 400, error);
         }
     },
 
     getOne: function (req, res) {
         const id = req.params.id || '';
         try {
-            const attributes = ['id', 'title', 'category', 'author', 'parts', 'created_at', 'updated_at', 'created_by', 'updated_by'];
+            const attributes = ['id', 'player_name', 'created_at'];
 
             const where = { id: id };
 
-            book.findOne({
+            snake_score.findOne({
                 where: where,
                 attributes: attributes,
                 raw: true,
@@ -42,11 +39,11 @@ module.exports = {
                 if (result) {
                     return rest.sendSuccessOne(res, result, 200);
                 } else {
-                    return rest.sendError(res, 1, 'unavailable_book', 400);
+                    return rest.sendError(res, 1, 'unavailable_snake_score', 400);
                 }
             });
         } catch (error) {
-            return rest.sendError(res, 400, 'get_book_fail', 400, error);
+            return rest.sendError(res, 400, 'get_snake_score_fail', 400, error);
         }
     },
 
@@ -59,7 +56,7 @@ module.exports = {
             const sort = [];
             const offset = perPage * (page - 1);
 
-            book.findAndCountAll({
+            snake_score.findAndCountAll({
                 where: where,
                 limit: perPage,
                 offset: offset,
@@ -88,10 +85,10 @@ module.exports = {
                     output.pages.hasPrev = (output.pages.prev !== 0);
                     return rest.sendSuccessMany(res, output, 200);
                 }).catch(function (error) {
-                    return rest.sendError(res, 1, 'get_list_book_fail', 400, error);
+                    return rest.sendError(res, 1, 'get_list_snake_score_fail', 400, error);
                 });
         } catch (error) {
-            return rest.sendError(res, 1, 'get_list_book_fail', 400, error);
+            return rest.sendError(res, 1, 'get_list_snake_score_fail', 400, error);
         }
     },
 
@@ -113,7 +110,7 @@ module.exports = {
             }
             const where = { id: req.params.id };
 
-            book.update(
+            snake_score.update(
                 query,
                 {
                     where: where,
@@ -124,16 +121,16 @@ module.exports = {
                     if ((result) && (result.length === 2)) {
                         return rest.sendSuccessOne(res, { id: req.params.id }, 200);
                     } else {
-                        return rest.sendError(res, 1, 'update_book_fail', 400, null);
+                        return rest.sendError(res, 1, 'update_snake_score_fail', 400, null);
                     }
                 }).catch(function (error) {
                     'use strict';
                     console.log(error);
-                    return rest.sendError(res, 1, 'update_book_fail', 400, error);
+                    return rest.sendError(res, 1, 'update_snake_score_fail', 400, error);
                 });
         } catch (error) {
             console.log(error);
-            return rest.sendError(res, 1, 'update_book_fail', 400, error);
+            return rest.sendError(res, 1, 'update_snake_score_fail', 400, error);
         }
     },
 
@@ -141,21 +138,68 @@ module.exports = {
         try {
             const where = { id: req.params.id };
 
-            book.destroy(
+            snake_score.destroy(
                 { where: where }).then((result) => {
                     'use strict';
                     if (result >= 1) {
                         return rest.sendSuccessOne(res, { id: req.params.id }, 200);
                     } else {
-                        return rest.sendError(res, 1, 'delete_book_fail', 400, null);
+                        return rest.sendError(res, 1, 'delete_snake_score_fail', 400, null);
                     }
                 }).catch(function (error) {
                     'use strict';
-                    return rest.sendError(res, 1, 'delete_book_fail', 400, error);
+                    return rest.sendError(res, 1, 'delete_snake_score_fail', 400, error);
                 });
         } catch (error) {
-            return rest.sendError(res, 1, 'delete_book_fail', 400, error);
+            return rest.sendError(res, 1, 'delete_snake_score_fail', 400, error);
         }
-    }
+    },
+
+    rank: function (req, res) {
+        var mysql = require('mysql2');
+
+        var con = mysql.createConnection({
+            host: "127.0.0.1",
+            user: "api",
+            password: "123",
+            database: "audio_book"
+
+            // host: process.env.DB_HOST,
+            // port: process.env.DB_PORT,
+            // username: process.env.DB_USER,
+            // password: process.env.DB_PASSWORD,
+            // database: process.env.DB_NAME
+        });
+
+        con.connect(function (err) {
+            if (err) throw err;
+            con.query("SELECT id, player_name, score, rank() OVER (order by score desc ) AS 'rank' FROM audio_book.tbl_snake_score;", function (err, result) {
+                if (err) throw err;
+                console.log(result);
+            });
+        });
+
+        const id = req.params.id || '';
+        try {
+            const attributes = ['id', 'player_name', 'created_at', 'rank'];
+
+            const where = { id: id };
+
+            snake_score.findOne({
+                where: where,
+                attributes: attributes,
+                raw: true,
+            }).then((result) => {
+                'use strict';
+                if (result) {
+                    return rest.sendSuccessOne(res, result, 200);
+                } else {
+                    return rest.sendError(res, 1, 'unavailable_snake_score', 400);
+                }
+            });
+        } catch (error) {
+            return rest.sendError(res, 400, 'get_snake_score_fail', 400, error);
+        }
+    },
 };
 

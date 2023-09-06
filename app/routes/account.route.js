@@ -1,7 +1,3 @@
-/**
- * Created by bioz on 1/13/2017.
- */
-// our components
 const accountService = require('../services/account.service');
 
 module.exports = function (app) {

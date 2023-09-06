@@ -47,7 +47,7 @@ require('./app/route')(App); // configure our routes
 let server = require('http').createServer(App);
 
 // Start app: http://IP_Address:port
-const port = 443;
+const port = 3000;
 server.listen(port, function () {
     console.log('API V2.1 started to listening on port %d', port);
 });
