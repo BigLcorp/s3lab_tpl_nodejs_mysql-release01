@@ -79,7 +79,7 @@ module.exports = function (app) {
      *       "message": "invalid input"
      *     }
      */
-    app.post('/api/v1/auth/accounts', accountService.create);
+    app.post('/api/v1/accounts', accountService.create);
     app.put('/api/v1/auth/accounts/:id', accountService.update);
     app.put('/api/v1/auth/accounts', accountService.updates);
     app.delete('/api/v1/auth/accounts/:id', accountService.delete);

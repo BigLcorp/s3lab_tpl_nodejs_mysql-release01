@@ -1,7 +1,3 @@
-/**
- * Created by bioz on 1/13/2017.
- */
-// third party components
 const jsonWebToken = require('jsonwebtoken');
 
 // our components
@@ -9,7 +5,7 @@ const config = require('../configs/general.config');
 const accountService = require('../services/account.service');
 const rest = require('../utils/restware.util');
 
-module.exports = function(req, res, next) {
+module.exports = function (req, res, next) {
   if (req.method === 'OPTIONS') {
     return rest.sendSuccessOne(res, {}, 200);
   }
@@ -17,11 +13,11 @@ module.exports = function(req, res, next) {
 
   if (token) {
     try {
-      jsonWebToken.verify(token, config.jwtAuthKey, function(error, decoded) {
+      jsonWebToken.verify(token, config.jwtAuthKey, function (error, decoded) {
         if (error) {
           return rest.sendError(res, 70, 'verify_token_fail', 400, error);
         }
-        accountService.verifyAccount(decoded.id, decoded.login_name, function(errorCode, errorMessage, httpCode, errorDescription, result) {
+        accountService.verifyAccount(decoded.id, decoded.login_name, function (errorCode, errorMessage, httpCode, errorDescription, result) {
           if (errorCode) {
             return rest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
           }

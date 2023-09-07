@@ -1,8 +1,5 @@
-/**
- * Created by s3lab. on 1/13/2017.
- */
 'use strict';
-const sendSuccessOne = function(res, data, iHttpCode) {
+const sendSuccessOne = function (res, data, iHttpCode) {
     if (!res) {
         return;
     }
@@ -23,7 +20,7 @@ const sendSuccessOne = function(res, data, iHttpCode) {
     return res.json(out);
 };
 
-const sendSuccessMany = function(res, data, iHttpCode) {
+const sendSuccessMany = function (res, data, iHttpCode) {
     if (!res) {
         return;
     }
@@ -43,7 +40,7 @@ const sendSuccessMany = function(res, data, iHttpCode) {
     return res.json(out);
 };
 
-const sendSuccessWebContent = function(res, data, iHttpCode) {
+const sendSuccessWebContent = function (res, data, iHttpCode) {
     if (!res) {
         return;
     }
@@ -51,7 +48,7 @@ const sendSuccessWebContent = function(res, data, iHttpCode) {
     const httpStatus = iHttpCode ? iHttpCode : 200;
     let out = {};
 
-    if ( data ) {
+    if (data) {
         out = data;
     }
 
@@ -60,7 +57,7 @@ const sendSuccessWebContent = function(res, data, iHttpCode) {
     return res.end(out);
 };
 
-const sendSuccessToken = function(res, token, payload, message = '') {
+const sendSuccessToken = function (res, token, payload, message = '') {
     if (!res) {
         return;
     }
@@ -77,7 +74,7 @@ const sendSuccessToken = function(res, token, payload, message = '') {
     return res.json(out);
 };
 
-const sendError = function(res, errorCode, errorMes, httpCode, errorDesc, data) {
+const sendError = function (res, errorCode, errorMes, httpCode, errorDesc, data) {
     if (!res) {
         return;
     }

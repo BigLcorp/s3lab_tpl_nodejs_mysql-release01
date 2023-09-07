@@ -14,8 +14,8 @@ module.exports = {
     create: function (req, res) {
         try {
             const query = {};
-            query.created_by = req.body.accessAccountId;
-            query.updated_by = req.body.accessAccountId;
+            query.created_by = 1;
+            query.updated_by = 1;
             query.login_name = req.body.login_name;
             query.full_name = req.body.full_name;
 
